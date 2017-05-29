@@ -98,16 +98,17 @@ namespace Wifi_Check
         #region Regex Section
         private void regex_lines(string input2)
         {
-            Regex regex = new Regex(@"SSID \d : (?<after>\w+)"); // SSID
-            Regex regex2 = new Regex(@"BSSID \d * : (?<after>\w+.*)"); // BSSID
-         // Regex regex2 = new Regex(@"([a-f0-9]{2}:){5}[a-f0-9]{2}"); //BSSID
+         // Regex regex1 = new Regex(@"SSID \d+ : (?<after>.*)"); // SSID ONLY
+            Regex regex1 = new Regex(@"(?<before>\w+) \d+ : (?<after>.*)"); //SSID, Regex Matches Before and After Digits
+            Regex regex2 = new Regex(@"BSSID \d+ * : (?<after>\w+.*)"); // BSSID
+         // Regex regex2 = new Regex(@"([a-f0-9]{2}:){5}[a-f0-9]{2}"); //BSSID, can match multiple BSSID from a single SSID
             Regex regex3 = new Regex(@"Authentication * : (?<after>\w+.*)"); // Authentication
             Regex regex4 = new Regex(@"Encryption * : (?<after>\w+.*)"); // Encryption
             Regex regex5 = new Regex(@"Signal * : (?<after>\w+.*)"); // Signal
             Regex regex6 = new Regex(@"Channel * : (?<after>\w+.*)"); // Channel
             Regex regex7 = new Regex(@"Radio type * : (?<after>\w+.*)"); // Radio Type
 
-            Match match = regex.Match(input2); // SSID
+            Match match1 = regex1.Match(input2); // SSID
             Match match2 = regex2.Match(input2); // BSSID
             Match match3 = regex3.Match(input2); // Authentication
             Match match4 = regex4.Match(input2); // Encryption
@@ -115,11 +116,11 @@ namespace Wifi_Check
             Match match6 = regex6.Match(input2); // Channel
             Match match7 = regex7.Match(input2); // Radio Type
 
-
-            if (match.Success) // SSID
+            if (match1.Success)
             {
                 count_ssid++;
-                ssid_content = match.Groups["after"].Value;
+                ssid_content = match1.Groups["after"].Value;
+                if (ssid_content == "") { ssid_content = @"<Hidden Network> " + count_ssid; } // Handles hidden networks
                 table.Rows.Add(count_ssid, ssid_content);
                 // textBox1_test.Text += ssid_content + "\r\n"; // SSID
             }
