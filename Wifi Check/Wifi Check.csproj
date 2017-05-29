@@ -68,6 +68,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\GlobalVars.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Code\ProcessData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Code\Table.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Code\Wifi.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
