@@ -15,6 +15,13 @@ namespace Wifi_Check
 {
     public partial class Form1 : Form
     {
+        int ssid_number_control = 0;
+        /*
+            int ssid_number_control = 0;
+            Help matches signal, channel and radio type when there are more than one bssid... we want to use 1 bssid per ssid
+            So ssid_number_control is 1 whenever a new SSID is found.
+            And ssid_number_control is 0 when channel (the last data of the section for a single bssid) is found.
+        */
         private void parse_lines(string input)
         {
             // Reads the string
@@ -45,7 +52,7 @@ namespace Wifi_Check
         {
             Regex regex1 = new Regex(@"(?<before>\w+) \d+ : (?<after>.*)"); // SSID, Regex Matches Before and After Digits (Matches Hidden Networks too)
                                                                             // Regex regex1 = new Regex(@"SSID \d+ : (?<after>.*)"); // SSID ONLY (Can't match Hidden Networks)
-            Regex regex2 = new Regex(@"BSSID \d+ * : (?<after>\w+.*)"); // BSSID
+            Regex regex2 = new Regex(@"BSSID 1 * : (?<after>\w+.*)"); // BSSID or    @"BSSID \d+ * : (?<after>\w+.*)"
                                                                         // Regex regex2 = new Regex(@"([a-f0-9]{2}:){5}[a-f0-9]{2}"); //BSSID, can match multiple BSSID from a single SSID
             Regex regex3 = new Regex(@"Authentication * : (?<after>\w+.*)"); // Authentication
             Regex regex4 = new Regex(@"Encryption * : (?<after>\w+.*)"); // Encryption
@@ -68,6 +75,7 @@ namespace Wifi_Check
                 if (ssid_content == "") { ssid_content = @"<Hidden Network> " + count_ssid; } // Handles hidden networks
                 table.Rows.Add(count_ssid, ssid_content);
                 // textBox1_test.Text += ssid_content + "\r\n"; // SSID
+                ssid_number_control = 1; // switch one when we are currently working on one ssid
             }
 
             if (match2.Success) // BSSID
@@ -109,42 +117,54 @@ namespace Wifi_Check
                     }
                 }
             }
+            #region Per BSSID
             if (match5.Success) // Signal
             {
                 signal_content = match5.Groups["after"].Value;
-                foreach (DataRow dr in table.Rows)
+                if (ssid_number_control == 1)
                 {
-                    if (dr["SSID"] == ssid_content)
+                    foreach (DataRow dr in table.Rows)
                     {
-                        dr["Signal"] = signal_content;
-                        break;
+                        if (dr["SSID"] == ssid_content)
+                        {
+                            dr["Signal"] = signal_content;
+                            break;
+                        }
                     }
                 }
             }
-            if (match6.Success) // Channel
+            if (match6.Success) // Channel (Last for a single BSSID) (Note whe are not using data rates)
             {
                 channel_content = match6.Groups["after"].Value;
-                foreach (DataRow dr in table.Rows)
+                if (ssid_number_control == 1)
                 {
-                    if (dr["SSID"] == ssid_content)
+                    foreach (DataRow dr in table.Rows)
                     {
-                        dr["Channel"] = channel_content;
-                        break;
+                        if (dr["SSID"] == ssid_content)
+                        {
+                            dr["Channel"] = channel_content;
+                            ssid_number_control = 0; // last ssid section sets this control to 0, so we return just the data for the first bssid found
+                            break;
+                        }
                     }
                 }
             }
             if (match7.Success) // Radio Type
             {
                 radiotype_content = match7.Groups["after"].Value;
-                foreach (DataRow dr in table.Rows)
+                if (ssid_number_control == 1)
                 {
-                    if (dr["SSID"] == ssid_content)
+                    foreach (DataRow dr in table.Rows)
                     {
-                        dr["Radio Type"] = radiotype_content;
-                        break;
+                        if (dr["SSID"] == ssid_content)
+                        {
+                            dr["Radio Type"] = radiotype_content;
+                            break;
+                        }
                     }
                 }
             }
+            #endregion
         }
         #endregion
     }
