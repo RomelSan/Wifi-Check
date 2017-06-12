@@ -28,17 +28,35 @@ namespace Wifi_Check
 
         private void scan_wifi()
         {
+            button1_test.Enabled = false;
             reset_all(); // reset current data
             textBox1_test.Text = ""; // clear text box data
             textBox1_test.Text = "Command: netsh wlan show network mode=bssid" + "\r\n"; // show the command executed via CMD
             string wifidata = wificheck(); // Gets Wifi Data to string
             parse_lines(wifidata); // Process each line of the string
             dataGridView1.DataSource = table; // Show that data on the grid
+            timer1_wifiScan.Start();
         }
 
         private void button1_test_Click(object sender, EventArgs e)
         {
             scan_wifi();
-        }        
+        }
+
+        private void button_exportCSV_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                export_CSV();
+                MessageBox.Show("Ok\nCheck for wifi.csv", "Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch { MessageBox.Show("Scan for Wifi and then export to CSV", "Error",MessageBoxButtons.OK,MessageBoxIcon.Exclamation); }
+        }
+
+        private void timer1_wifiScan_Tick(object sender, EventArgs e)
+        {
+            button1_test.Enabled = true;
+            timer1_wifiScan.Stop();
+        }
     }
 }

@@ -28,11 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.textBox1_test = new System.Windows.Forms.TextBox();
             this.button1_test = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.label1_credits = new System.Windows.Forms.Label();
+            this.button_exportCSV = new System.Windows.Forms.Button();
+            this.timer1_wifiScan = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -81,17 +84,34 @@
             // 
             this.label1_credits.AutoSize = true;
             this.label1_credits.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1_credits.Location = new System.Drawing.Point(131, 16);
+            this.label1_credits.Location = new System.Drawing.Point(261, 16);
             this.label1_credits.Name = "label1_credits";
             this.label1_credits.Size = new System.Drawing.Size(441, 15);
             this.label1_credits.TabIndex = 3;
             this.label1_credits.Text = "Wifi Check v1.0 by @RomelSan - https://www.github.com/RomelSan";
+            // 
+            // button_exportCSV
+            // 
+            this.button_exportCSV.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button_exportCSV.Location = new System.Drawing.Point(142, 12);
+            this.button_exportCSV.Name = "button_exportCSV";
+            this.button_exportCSV.Size = new System.Drawing.Size(113, 23);
+            this.button_exportCSV.TabIndex = 4;
+            this.button_exportCSV.Text = "Export as CSV";
+            this.button_exportCSV.UseVisualStyleBackColor = true;
+            this.button_exportCSV.Click += new System.EventHandler(this.button_exportCSV_Click);
+            // 
+            // timer1_wifiScan
+            // 
+            this.timer1_wifiScan.Interval = 3000;
+            this.timer1_wifiScan.Tick += new System.EventHandler(this.timer1_wifiScan_Tick);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(883, 507);
+            this.Controls.Add(this.button_exportCSV);
             this.Controls.Add(this.label1_credits);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.button1_test);
@@ -113,6 +133,8 @@
         private System.Windows.Forms.Button button1_test;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label label1_credits;
+        private System.Windows.Forms.Button button_exportCSV;
+        private System.Windows.Forms.Timer timer1_wifiScan;
     }
 }
 
