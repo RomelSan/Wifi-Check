@@ -35,7 +35,8 @@ namespace Wifi_Check
             string wifidata = wificheck(); // Gets Wifi Data to string
             parse_lines(wifidata); // Process each line of the string
             dataGridView1.DataSource = table; // Show that data on the grid
-            timer1_wifiScan.Start();
+            checkInsecureEncryption(); // Mark Cell with RED if WEP Encryption is found
+            timer1_wifiScan.Start(); // Disable the scan wifi button for a few seconds
         }
 
         private void button1_test_Click(object sender, EventArgs e)
@@ -58,5 +59,19 @@ namespace Wifi_Check
             button1_test.Enabled = true;
             timer1_wifiScan.Stop();
         }
+
+        private void checkInsecureEncryption()
+        {
+            int rowscount = dataGridView1.Rows.Count;
+            for (int i = 0; i < rowscount; i++)
+            {
+                if (Convert.ToString(dataGridView1.Rows[i].Cells[4].Value).StartsWith("WEP") == true)
+                {
+                    dataGridView1.Rows[i].Cells[4].Style.BackColor = Color.Red;
+                }
+            }
+            dataGridView1.Refresh();
+        }
+
     }
 }
